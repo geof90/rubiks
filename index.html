@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Geoffrey Goh">
+        <meta name="description" content="An interactive and web-based 3D Rubik's cube visualizer and modeller.">
+        <meta name="keywords" content="Rubik's Cube Three.js Solver 3D visualization">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta property="og:image" content="https://geof90.github.io/rubiks/img/thumb.png">
+        <title>geof90/Rubiks</title>
+        
+        <link href="style.css" rel="stylesheet" type="text/css">
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="lib/threejs/three.min.js"></script>
+        <script src="lib/threejs/OrbitControls.js"></script>
+        <script src="lib/tween/Tween.js"></script>
+        <script src="lib/cubejs/cube.js"></script>
+        <script src="lib/cubejs/async.js"></script>
+    </head>
+    <body>
+        <div id="header"><a href="https://github.com/geof90/rubiks" target=_blank>geof90/rubiks</a> - A interactive and web-based 3D Rubik's cube visualizer and modeller.</div>
+        <div id="overlay"></div>
+        <div id="viewport"></div>
+        <div id="footer">
+            <div>
+                <img id="solve" class="button" src="img/solve.png">
+                <img id="shuffle" class="button" src="img/shuffle.png">
+                <img id="rotate" class="button" src="img/rotate.png">
+            </div>
+            <div class="opgroup">
+                <img class="operation" id="F" src="img/F.png">
+                <img class="operation" id="L" src="img/L.png">
+                <img class="operation" id="B" src="img/B.png">
+            </div>
+            <div class="opgroup">
+                <img class="operation" id="R" src="img/R.png">
+                <img class="operation" id="U" src="img/U.png">
+                <img class="operation" id="D" src="img/D.png">
+            </div>
+            <br/>
+            <div class="opgroup">
+               <img class="operation" id="f" src="img/Finv.png">
+               <img class="operation" id="l" src="img/Linv.png">
+               <img class="operation" id="b" src="img/Binv.png">
+            </div>
+            <div class="opgroup">
+                <img class="operation" id="r" src="img/Rinv.png">
+                <img class="operation" id="u" src="img/Uinv.png">
+                <img class="operation" id="d" src="img/Dinv.png">
+            </div>
+        </div>
+        <script src="main.js"></script>
+    </body>
+</html>
