@@ -35,7 +35,7 @@ body {
 .operation {
     cursor: pointer;
     margin: -4px;
-    max-width: 16vw;
+    max-width: 15vw;
 }
 
 .button {
