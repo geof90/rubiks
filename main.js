@@ -3,7 +3,8 @@ var OPS = ["F", "L", "B", "R", "U", "D"];
 var perspective = 0;
 
 var solverInitialized = false;
-var solver = new Cube();
+var solvers = [];
+solvers.push(new Cube());
 
 Cube.asyncInit("lib/cubejs/worker.js", function() {
     solverInitialized = true;
@@ -15,7 +16,7 @@ function action(cubes, scene, operation, inverse, done) {
     if (locked) return;
     locked = true;
     
-    solver.move(inverse ? (operation + "'") : operation);
+    solvers[solvers.length - 1].move(inverse ? (operation + "'") : operation);
     
     var axis = getAxis(operation, inverse);
     var group = groupAndSwap(cubes, scene, operation, inverse);
@@ -355,38 +356,58 @@ function init() {
         function doSolve() {
             document.getElementById("overlay").style.display = "";
             if (solverInitialized) {
-                Cube.asyncSolve(solver, function(solutionString) {
-                    document.getElementById("overlay").style.display = "none";
-                    var solution = solutionString.split(" ");
-                    var nextAction = function() {
-                        if (solution.length) {
-                            if (solution[0].endsWith("'")) {
-                                tweener = action(cubes, scene, solution[0].charAt(0), true, nextAction);
-                            } else if (solution[0].endsWith("2")) {
-                                var move = solution[0].charAt(0);
-                                solution = solution.splice(1);
-                                solution.unshift(move);
-                                solution.unshift(move);
-                                tweener = action(cubes, scene, move, false, nextAction);
-                            } else {
-                                tweener = action(cubes, scene, solution[0], false, nextAction);
-                            }
-                            
-                            solution = solution.splice(1);
+                function solveOne() {
+                    if (solvers[solvers.length - 1].isSolved()) {
+                        if (solvers.length > 1) {
+                            solvers.pop();
+                            rotateWholeCube(cubes, scene, solveOne);
                         }
-                    };
-                    
-                    nextAction();
-                }); 
+                    } else {
+                        Cube.asyncSolve(solvers[solvers.length - 1], function(solutionString) {
+                            document.getElementById("overlay").style.display = "none";
+                            var solution = solutionString.split(" ");
+                            var nextAction = function() {
+                                if (solution.length) {
+                                    if (solution[0].endsWith("'")) {
+                                        tweener = action(cubes, scene, solution[0].charAt(0), true, nextAction);
+                                    } else if (solution[0].endsWith("2")) {
+                                        var move = solution[0].charAt(0);
+                                        solution = solution.splice(1);
+                                        solution.unshift(move);
+                                        solution.unshift(move);
+                                        tweener = action(cubes, scene, move, false, nextAction);
+                                    } else {
+                                        tweener = action(cubes, scene, solution[0], false, nextAction);
+                                    }
+                                    
+                                    solution = solution.splice(1);
+                                } else {
+                                    if (solvers.length > 1) {
+                                        solvers.pop();
+                                        rotateWholeCube(cubes, scene, solveOne);
+                                    }
+                                }
+                            };
+                            
+                            nextAction();
+                        }); 
+                    }
+                }
+                
+                solveOne();
             } else {
                 setTimeout(doSolve, 100);
             }
         }
         
-        if (!solver.isSolved()) {
-            setTimeout(doSolve, 1);
+        for (var i = 0; i < solvers.length; i++) {
+            if (!solvers[i].isSolved()) {
+                setTimeout(doSolve, 1);
+                break;
+            }
         }
     };
+    
     document.getElementById("rotate").onclick = function() { tweener = rotateWholeCube(cubes, scene) || tweener; };
 }
              
@@ -398,9 +419,11 @@ function rotateAroundWorldAxis(object, axis, radians) {
     object.rotation.setFromRotationMatrix(object.matrix);
 }
 
-function rotateWholeCube(cubes, scene) {
+function rotateWholeCube(cubes, scene, done) {
     if (locked) return;
     locked = true;
+    
+    if (!done) solvers.push(new Cube());
     
     var axis = getAxis(OPS[0], true);
     var group = new THREE.Object3D();
@@ -448,6 +471,7 @@ function rotateWholeCube(cubes, scene) {
                     });
                     
                     locked = false;
+                    done && done();
                 }, 1);
             }
         })
