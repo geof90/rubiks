@@ -13,11 +13,11 @@ body {
 
 #header {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding-left: 2px;
+    padding: 10px;
     position: absolute;
-    text-align: center;
+    text-align: left;
     top: 0;
-    width: 100%;
+    width: 60%;
 }
 
 #footer {
@@ -35,7 +35,7 @@ body {
 .operation {
     cursor: pointer;
     margin: -4px;
-    max-width: 15vw;
+    max-width: 16vw;
 }
 
 .button {
