@@ -1,6 +1,6 @@
 # geof90/Rubiks
 
-An interactive and web-based 3D Rubik's cube visualizer and modeller. [Demo](https://geof90.github.io/rubiks)
+An interactive and web-based 3D Rubik's cube simulator. [Demo](https://geof90.github.io/rubiks)
 
 ## Libraries
 
